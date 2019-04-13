@@ -1,0 +1,67 @@
+KLASY:
+1.Matka
+/*Klasa która w każdym cyklu jest początkiem nowego pokolenia.
+ Wydając nowego potomka kopiuje samą siebie i dodaje nowy kształt do kolekcji(jeśli jest faza 
+ dodawania nowych kształtów) bądź tylko daje kopię(jeśli jest faza mutowania)*/
+
+2.Potomek
+/*Klasa, która jest kopią matki, w trakcie pojedynczego cyklu przechodzi przemianę. Tworzy liczną populację.
+Na koniec cyklu przeżywają tylko najlepiej przystosowani potomkowie.*/
+
+3.Środowisko
+/*Klasa reprezentująca środowisko, w którym żyje matka i potomkowie. Zarządza przebiegiem cylku, weryfikuje
+dopasowanie potomków i matki, decyduje o tym, który potomek jest najsilniejszy.*/
+
+4.Kształt
+/*Reprezentacja pojedynczego elementu składowego matki i potomków.*/
+
+5.Kolor
+/*element składowy klasy kształt*/
+
+Matka{
+    int fitness;   //   dopasowanie do obrazka odniesienia
+    vector<Kształt> partsCollection;  // kolekcja obiektów typu kształt, z których składa się matka 
+    QImage* motherImage;    //  wskaźnik na obraz wygenerowany z danych zawartych w partsCollection
+
+    Potomek CreateNewPotomek(); //  matka rodzi nowego potomka
+    void UpdateFromChild(); //  jeśli potomek pod koniec cyklu jest lepszy niż matka i wszyscy inni potomkowie to zastępuje matkę
+}
+
+Potomek{
+    int fitness;    //  dopasowanie do obrazka odniesienia
+    vector<Kształt> partsCollection;    //  podobnie jak matka potomek posiada kolekcję swoich części składowych
+
+    void mutate();   //  w fazie mutacji potomek mutuje, czyli zmienia jeden z parametrów swojego obrazu
+
+}
+
+Środowisko{
+    enum Faza {FAZA_MUTACJI, FAZA_KSZTAŁTU};
+    Faza obecnaFaza;
+    QImage* obrazekOdniesienia; //  ten obrazek, który chcemy odtworzyć
+    QImage* jedenZPotomków; //  tutaj będzie przechowywany obraz potomka, którego chcemy porównać z obrazkiem odniesienia. Będziemy budować po kolei każdego potomka i go tutaj zapisywać, aby obliczyć jego fitness
+    Matka mother;
+    vector<Potomek> pokolenie;
+
+    int calculateFitness();
+    void sortujOdNajsilniejszych(); //  sortowanie kolekcji "pokolenie" od najlepiej dopasowanych do tych najgorzej
+    void zabijSłabych();    //  usuwamy najgorzej dopasowanych potomków, zostawiamy część najlepiej dopasowanych
+    void cykl();    //  funkcja odpowiedzialna za przeprowadzenie pojedynczego cyklu pokoleniowego
+
+}
+
+Kształt{    //  pierwszym celem jest żeby aplikacja działała na jednym kształcie - kole, w Qt koło tworzy się rysując szczególną elipsę
+    double X;
+    double Y;
+    double Height;
+    double Width;
+}
+
+Kolor{
+    int R;
+    int G;
+    int B;
+    
+    void generateColour;
+
+}
